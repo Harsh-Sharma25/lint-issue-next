@@ -1,7 +1,9 @@
+import { DEFAULT_DEBOUNCE_TIME } from '@/hooks/useDeb';
 import styles from '@/styles/Home.module.css';
 import localFont from 'next/font/local';
 import Head from 'next/head';
 import Image from 'next/image';
+import { useRef, useCallback } from 'react';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -15,23 +17,23 @@ const geistMono = localFont({
 });
 
 export default function Home() {
-  // const useDebouncedCallback = <T extends (...args: any[]) => void>(func: T, delay: number = DEFAULT_DEBOUNCE_TIME) => {
-  //   const timeout = useRef<number | undefined>(undefined);
+  const useDebouncedCallback = <T extends (...args: any[]) => void>(func: T, delay: number = DEFAULT_DEBOUNCE_TIME) => {
+    const timeout = useRef<number | undefined>(undefined);
 
-  //   return useCallback(
-  //     (...args: Parameters<T>) => {
-  //       const debounceTimeout = () => {
-  //         clearTimeout(timeout.current);
-  //         func(...args);
-  //       };
+    return useCallback(
+      (...args: Parameters<T>) => {
+        const debounceTimeout = () => {
+          clearTimeout(timeout.current);
+          func(...args);
+        };
 
-  //       clearTimeout(timeout.current);
-  //       timeout.current = window.setTimeout(debounceTimeout, delay);
-  //     },
-  //     // [func, delay]
-  //     []
-  //   );
-  // };
+        clearTimeout(timeout.current);
+        timeout.current = window.setTimeout(debounceTimeout, delay);
+      },
+      // [func, delay]
+      []
+    );
+  };
 
   return (
     <>
